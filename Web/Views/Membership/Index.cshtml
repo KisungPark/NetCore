@@ -1,0 +1,24 @@
+﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "멤버십";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string userId = string.Empty;
+    string userRoleId = string.Empty;
+    string[] userDataInfos = new[] {string.Empty, string.Empty, string.Empty, string.Empty};
+
+    if (Context.User.Claims.Any())
+    {
+        userId = User.FindFirst(claims => claims.Type.Equals(ClaimTypes.Name)).Value;
+        userRoleId = User.FindFirst(claims => claims.Type.Equals(ClaimTypes.Role)).Value;
+        userDataInfos = User.FindFirst(claims => claims.Type.Equals(ClaimTypes.UserData)).Value.Split("|");
+    }
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="text-info">@Html.Raw(TempData["Message"])</div>
+@if(Context.User.Identity.IsAuthenticated){
+    <div class="text-danger">@($"{userId}({userDataInfos[2]})님의 권한은 {userRoleId}({userDataInfos[0]})입니다.")</div>
+    <a asp-controller="membership" asp-action="LogOut" class="btn btn-primary">멤버십 로그아웃</a>
+}

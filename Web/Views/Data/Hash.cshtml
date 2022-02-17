@@ -1,0 +1,51 @@
+﻿@model HashInfo
+@{
+    ViewData["Title"] = "암호 HASH 생성기";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script>
+        $("button[name='btnCopy']").click(function () {
+            $("textarea[name='PasswordHash']").select();
+            document.execCommand("copy");
+        })
+    </script>
+}
+<h2>@ViewData["Title"]</h2>
+
+<div class="text-info">@ViewData["message"]</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-controller="Data" asp-action="Hash" onsubmit="btnHash.disabled = true; return true;">
+            <div class="text-danger" asp-validation-summary="All" ></div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.UserId)
+                <input asp-for="UserId" class="form-control" placeholder="User Id" autofocus />
+                <span class="text-danger" asp-validation-for="UserId"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Password)
+                <input asp-for="Password" class="form-control" placeholder="Password" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.GUIDSalt)
+                <input class="form-control" placeholder="GUID Salt" readonly asp-for="GUIDSalt" value="@(Model != null ? Model.GUIDSalt : string.Empty)"/>
+                <span class="text-danger" asp-validation-for="GUIDSalt"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.RNGSalt)
+                <input class="form-control" placeholder="RandomNumberGenerator Salt" readonly asp-for="RNGSalt" value="@(Model != null ? Model.RNGSalt : string.Empty)"/>
+                <span class="text-danger" asp-validation-for="RNGSalt"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.PasswordHash)
+                 <textarea class="form-control" style="height:150px;" name="PasswordHash" placeholder="Encrypted user info" readonly="readonly">@(Model != null ? Model.PasswordHash : string.Empty)</textarea>
+                 <span class="text-danger" asp-validation-for="PasswordHash"></span>
+            </div>
+            <button type="submit" name="btnHash" class="btn btn-lg btn-success btn-block">암호 Hash값 생성하기</button>
+            <button type="button" name="btnCopy" class="btn btn-primary btn-block">Hash 복사하기</button>
+        </form>
+    </div>
+</div>
