@@ -25,12 +25,12 @@
             <div class="text-danger" asp-validation-summary="All" ></div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.UserId)
-                <input asp-for="UserId" class="form-control" placeholder="User Id" autofocus />
+                <input class="form-control" placeholder="User Id" autofocus asp-for="UserId"/>
                 <span class="text-danger" asp-validation-for="UserId"></span>
             </div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.Password)
-                <input asp-for="Password" class="form-control" placeholder="Password" />
+                <input class="form-control" placeholder="Password" asp-for="Password" />
                 <span class="text-danger" asp-validation-for="Password"></span>
             </div>
             <div class="form-group">
@@ -40,11 +40,13 @@
             </div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.DecUserInfo)
-                <input type="text" asp-for="DecUserInfo" class="form-control" placeholder="Decrypted user info" value="@(Model != null ? Model.DecUserInfo : string.Empty)"/>
+                <input class="form-control" placeholder="Decrypted user info" readonly asp-for="DecUserInfo" />
                 <span class="text-danger" asp-validation-for="DecUserInfo"></span>
             </div>
-            <button type="submit" name="btnAES" class="btn btn-lg btn-success btn-block">AES 암호 생성하기</button>
-            <button type="button" name="btnCopy" class="btn btn-primary btn-block">암호정보 복사하기</button>
+            <div class="d-grid gap-2" style="margin-top:10px;">
+                <button type="submit" name="btnAES" class="btn btn-lg btn-success btn-block">AES 암호 생성하기</button>
+                <button type="button" name="btnCopy" class="btn btn-primary btn-block">암호정보 복사하기</button>
+            </div>
         </form>
     </div>
 </div>
