@@ -15,6 +15,7 @@
 		.Controller : 컨트롤러
 		.Views : 뷰
 		.DataProtector : 암호화에 필요한 키 값을 생성해서 저장하는 폴더 (다른데 위치해도 됨)
+		.Extensions : 확장매서드가 담긴 폴더. Newtonsoft.Json 패키지 설치
 
 로깅 패키지는 Net6를 지원하는 NLog로 적용
 (https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-6)

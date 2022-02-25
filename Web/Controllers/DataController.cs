@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Net.Data.ViewModels;
 using Net.Service.Interfaces;
+using Net.Web.Extensions;
 
 namespace Net.Web.Controllers
 {
@@ -10,13 +11,48 @@ namespace Net.Web.Controllers
     {
         private IDataProtector _protector;
         private IPasswordHasher _hasher;
+        private HttpContext _context;
+        private string _sessionKeyCartName = "_sessionCartKey";
 
-        public DataController(IDataProtectionProvider provider, IPasswordHasher hasher)
+        public DataController(IDataProtectionProvider provider, IPasswordHasher hasher, IHttpContextAccessor accessor)
         {
             _protector = provider.CreateProtector("Net.Data.v1");
             _hasher = hasher;
+            _context = accessor.HttpContext;
         }
 
+        #region private method
+        private void SetCartInfos(ItemInfo item, List<ItemInfo> cartInfos = null)
+        {
+            if(cartInfos == null)
+            {
+                cartInfos = _context.Session.Get<List<ItemInfo>>(_sessionKeyCartName);
+;               
+                if(cartInfos == null)
+                {
+                    cartInfos= new List<ItemInfo>();
+                }
+            }
+
+            cartInfos.Add(item);
+
+            _context.Session.Set<List<ItemInfo>>(_sessionKeyCartName, cartInfos);
+        }
+
+        private List<ItemInfo> GetCartInfos(ref string message)
+        {
+            var cartInfos = _context.Session.Get<List<ItemInfo>>(key: _sessionKeyCartName);
+
+            if (cartInfos == null || cartInfos.Count() < 1)
+            {
+                message = "장바구니에 담긴 상품이 없습니다.";
+            }
+
+            return cartInfos;
+        }
+        #endregion
+
+        #region AES
         [HttpGet]
         [Authorize(Roles = "SuperUser, SystemUser")]
         public IActionResult AES()
@@ -45,7 +81,9 @@ namespace Net.Web.Controllers
             ModelState.AddModelError(string.Empty, message);
             return View(aes);
         }
+        #endregion
 
+        #region Hash
         [HttpGet]
         public IActionResult Hash()
         {
@@ -71,6 +109,39 @@ namespace Net.Web.Controllers
             }
             ModelState.AddModelError(string.Empty, message);
             return View(hash);
+        }
+        #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddCart()
+        {
+            SetCartInfos(new ItemInfo() { ItemNo = Guid.NewGuid(), ItemName = DateTime.UtcNow.Ticks.ToString() });
+            return RedirectToAction("Cart", "Data");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult removeCart()
+        {
+            string message = string.Empty;
+            var cartInfo = GetCartInfos(ref message);
+
+            if (cartInfo != null && cartInfo.Count() > 0)
+            {
+                _context.Session.Remove(key: _sessionKeyCartName);
+            }
+
+            return RedirectToAction("Cart", "Data");
+        }
+
+        public IActionResult Cart()
+        {
+            string message = string.Empty;
+            var cartInfos = GetCartInfos(ref message);
+
+            ViewData["Message"] = message;
+            return View(cartInfos);
         }
     }
 }
