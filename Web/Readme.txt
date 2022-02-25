@@ -14,7 +14,17 @@
 	.Web
 		.Controller : 컨트롤러
 		.Views : 뷰
+		.DataProtector : 암호화에 필요한 키 값을 생성해서 저장하는 폴더 (다른데 위치해도 됨)
+
+로깅 패키지는 Net6를 지원하는 NLog로 적용
+(https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-6)
+1. 패키지 설치: Nlog, Nlog.Web.AspNetCore
+2. root디렉토리에 nlog.config 추가 : 저장위치 등 옵션 지정 가능
+3. program.cs 수정 (logger 사용)
+4. appsettings.json, appsettings.Development.json 수정
+5. 사용하고자 하는 controller에서 ILogger<Controller클래스명> 의존성 주입하여 사용 -> HomeController에 적용
 
 //vs 단축키
 - ctrl+. : import
 - ctrl+space : properties
+- ctrl+z : 코드 재정렬

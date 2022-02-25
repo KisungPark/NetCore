@@ -13,5 +13,30 @@ namespace Net.Service.Interfaces
         bool MatchTheUserInfo(LoginInfo login);
         User GetUserInfo(string userId);
         IEnumerable<UserRolesByUser> GetRolesOwnedByUser(string userId);
+        int RegisterUser(RegisterInfo register);
+        /// <summary>
+        /// 기존 사용자 정보 검색
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        UserInfo GetUserInfoForUpdate(string userId);
+        /// <summary>
+        /// 사용자 정보 수정
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        int UpdateUser(UserInfo user);
+        /// <summary>
+        /// 사용자 정보 변경여부 확인
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        bool CompareInfo(UserInfo user, UserInfo other);
+        /// <summary>
+        /// 사용자 탈퇴
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        int WithdrawnUser(LoginInfo user);
     }
 }

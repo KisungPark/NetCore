@@ -14,7 +14,7 @@
 }
 <h2>@ViewData["Title"]</h2>
 
-<div class="text-info">@ViewData["message"]</div>
+<div class="text-info">@Html.Raw(@TempData["message"])</div>
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-controller="Data" asp-action="Hash" onsubmit="btnHash.disabled = true; return true;">
@@ -31,12 +31,12 @@
             </div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.GUIDSalt)
-                <input class="form-control" placeholder="GUID Salt" readonly asp-for="GUIDSalt"/>
+                <input class="form-control" placeholder="GUID Salt" readonly asp-for="GUIDSalt" value="@(Model != null ? Model.GUIDSalt : string.Empty)"/>
                 <span class="text-danger" asp-validation-for="GUIDSalt"></span>
             </div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.RNGSalt)
-                <input class="form-control" placeholder="RandomNumberGenerator Salt" readonly asp-for="RNGSalt"/>
+                <input class="form-control" placeholder="RandomNumberGenerator Salt" readonly asp-for="RNGSalt" value="@(Model != null ? Model.RNGSalt : string.Empty)"/>
                 <span class="text-danger" asp-validation-for="RNGSalt"></span>
             </div>
             <div class="form-group">

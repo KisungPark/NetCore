@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Net.Data.ServiceModels;
 using Net.Service.Data;
 using Net.Service.Interfaces;
 using System;
@@ -36,11 +37,12 @@ namespace Net.Service.Services
             return Convert.ToBase64String(salt);
         }
 
+        //대소문자 처리(ID, PW)
         private string GetPasswordHash(string userId, string password, string guidSalt, string rngSalt)
         {
             // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: userId + password + guidSalt, //복잡도 증가를 위해 userId와 guidSalt 추가
+                password: userId.ToLower() + password.ToLower() + guidSalt, //복잡도 증가를 위해 userId와 guidSalt 추가
                 salt: Encoding.UTF8.GetBytes(rngSalt), //byte로 변경
                 prf: KeyDerivationPrf.HMACSHA512, //SHA512로 변경
                 iterationCount: 45000, //10000,25000,45000
@@ -50,6 +52,21 @@ namespace Net.Service.Services
         private bool MatchTheUserInfo(string userId, string password, string guidSalt, string rngSalt, string passwordHash)
         {
             return GetPasswordHash(userId, password, guidSalt, rngSalt).Equals(passwordHash);
+        }
+
+        private PasswordHashInfo PasswordInfo(string userId, string password)
+        {
+            var guidSalt = GetGUIDSalt();
+            var rngSalt = GetRNGSalt();
+
+            var passwordHashInfo = new PasswordHashInfo()
+            {
+                GUIDSalt = guidSalt,
+                RNGSalt = rngSalt,
+                PasswordHash = GetPasswordHash(userId, password, guidSalt, rngSalt),
+            };
+
+            return passwordHashInfo;
         }
         #endregion
 
@@ -80,9 +97,14 @@ namespace Net.Service.Services
         //    return MatchTheUserInfo(userId, password, guidSalt, rngSalt, passwordHash);
         //}
 
-        public bool CheckThePasswordInfo(string userId, string password, string guidSalt, string rngSalt, string passwordHash)
+        bool IPasswordHasher.CheckThePasswordInfo(string userId, string password, string guidSalt, string rngSalt, string passwordHash)
         {
             return MatchTheUserInfo(userId, password, guidSalt, rngSalt, passwordHash);
+        }
+
+        PasswordHashInfo IPasswordHasher.GetPasswordInfo(string userId, string password)
+        {
+            return PasswordInfo(userId, password);
         }
     }
 }

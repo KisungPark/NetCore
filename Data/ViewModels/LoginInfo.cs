@@ -10,7 +10,7 @@ namespace Net.Data.ViewModels
     public class LoginInfo
     {
         [Required(ErrorMessage ="ID를 입력하세요.")]
-        [MinLength(6,ErrorMessage ="6자 이상 입력해주세요.")]
+        [MinLength(5,ErrorMessage ="5자 이상 입력해주세요.")]
         [Display(Name="아이디")]
         public string? UserId {get; set;}
 

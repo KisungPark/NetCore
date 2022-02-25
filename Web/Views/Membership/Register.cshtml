@@ -1,0 +1,38 @@
+﻿@model RegisterInfo
+@{
+    ViewData["Title"] = "멤버십 가입";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="text-info">@Html.Raw(@TempData["Message"])</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-controller="Membership" asp-action="Register" onsubmit="btnRegister.disabled = true; return true;">
+            <div class="text-danger" asp-validation-summary="All" ></div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.UserId)
+                <input class="form-control" placeholder="User Id" autofocus asp-for="UserId" />
+                <span class="text-danger" asp-validation-for="UserId"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.UserName)
+                <input class="form-control" placeholder="UserName" asp-for="UserName"/>
+                <span class="text-danger" asp-validation-for="UserName"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.UserEmail)
+                <input class="form-control" placeholder="UserEmail" asp-for="UserEmail"/>
+                <span class="text-danger" asp-validation-for="UserEmail"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Password)
+                <input class="form-control" placeholder="Password" asp-for="Password" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            <button type="submit" name="btnRegister" class="btn btn-lg btn-success btn-block">가입하기</button>
+            <p style="padding-top:10px;"><a asp-route-returnurl="@ViewData["ReturnUrl"]" asp-controller="Membership" asp-action="Login" class="btn btn-primary">로그인</a></p>
+        </form>
+    </div>
+</div>

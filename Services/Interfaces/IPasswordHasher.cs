@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Net.Data.ServiceModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace Net.Service.Interfaces
         //UserService로 이동
         //bool MatchTheUserInfo(string userId, string password);
         bool CheckThePasswordInfo(string userId, string password, string guidSalt, string rngSalt, string passwordHash);
+
+        PasswordHashInfo GetPasswordInfo(string userId, string password);
     }
 }

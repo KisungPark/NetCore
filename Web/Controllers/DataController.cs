@@ -18,14 +18,14 @@ namespace Net.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "GeneralUser, SuperUser, SystemUser")]
+        [Authorize(Roles = "SuperUser, SystemUser")]
         public IActionResult AES()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "GeneralUser, SuperUser, SystemUser")]
+        [Authorize(Roles = "SuperUser, SystemUser")]
         [ValidateAntiForgeryToken]
         public IActionResult AES(AESInfo aes)
         {
